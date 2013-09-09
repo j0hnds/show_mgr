@@ -3,5 +3,4 @@ class Room < ActiveRecord::Base
   has_many :associates
   has_many :lines
 
-  attr_accessible :registration_id, :room
 end

@@ -13,6 +13,16 @@
 
 ActiveRecord::Schema.define(version: 20121116032145) do
 
+  create_table "address_infos", force: true do |t|
+    t.string   "address_1",   limit: 60
+    t.string   "address_2",   limit: 60
+    t.string   "city",        limit: 60
+    t.string   "state",       limit: 2
+    t.string   "postal_code", limit: 10
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "associates", force: true do |t|
     t.integer  "room_id",               null: false
     t.string   "first_name", limit: 40
@@ -29,29 +39,25 @@ ActiveRecord::Schema.define(version: 20121116032145) do
   end
 
   create_table "buyers", force: true do |t|
-    t.string   "first_name",      limit: 40
-    t.string   "last_name",       limit: 40
-    t.integer  "contact_info_id",            null: false
-    t.integer  "store_id",                   null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "contact_infos", force: true do |t|
-    t.string   "address_1",   limit: 60
-    t.string   "address_2",   limit: 60
-    t.string   "city",        limit: 60
-    t.string   "state",       limit: 2
-    t.string   "postal_code", limit: 10
-    t.string   "email",       limit: 80
+    t.string   "first_name", limit: 40
+    t.string   "last_name",  limit: 40
+    t.integer  "store_id",              null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "coordinators", force: true do |t|
-    t.string   "first_name",      limit: 40
-    t.string   "last_name",       limit: 40
-    t.integer  "contact_info_id",            null: false
+    t.string   "first_name", limit: 40
+    t.string   "last_name",  limit: 40
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "emails", force: true do |t|
+    t.integer  "emailable_id"
+    t.string   "emailable_type"
+    t.string   "email_type",     limit: 10
+    t.string   "address"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -59,7 +65,7 @@ ActiveRecord::Schema.define(version: 20121116032145) do
   create_table "exhibitors", force: true do |t|
     t.string   "first_name",      limit: 40
     t.string   "last_name",       limit: 40
-    t.integer  "contact_info_id",            null: false
+    t.integer  "address_info_id",            null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -75,7 +81,7 @@ ActiveRecord::Schema.define(version: 20121116032145) do
   create_table "phones", force: true do |t|
     t.integer  "phoneable_id"
     t.string   "phoneable_type"
-    t.string   "phone_type",     limit: 10
+    t.string   "phone_type",     limit: 20
     t.string   "phone_number",   limit: 15
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -109,14 +115,14 @@ ActiveRecord::Schema.define(version: 20121116032145) do
 
   create_table "stores", force: true do |t|
     t.string   "name"
-    t.integer  "contact_info_id", null: false
+    t.integer  "address_info_id", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "venues", force: true do |t|
     t.string   "name",            limit: 40
-    t.integer  "contact_info_id",            null: false
+    t.integer  "address_info_id",            null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

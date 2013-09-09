@@ -20,10 +20,57 @@ class RMSCDb
 
   def map_table_id(table, rmsc_id, new_id)
     table_id_map[table][rmsc_id] = new_id
+    # puts "Table(#{table.inspect}), rmsc_id(#{rmsc_id.inspect}), new_id(#{new_id.inspect})"
   end
 
   def table_id(table, rmsc_id)
-    table_id_map[table][rmsc_id]
+    table_id_map[table][rmsc_id].tap do | value |
+     #  puts "Getting value for table(#{table.inspect}), rmsc_id(#{rmsc_id}) = #{value.inspect}"
+    end
+  end
+
+  def table_ids(table)
+    table_id_map[table]
+  end
+
+  def table_has_keys?(table)
+    table_id_map[table].size > 0
+  end
+
+  def store_name(rmsc_show)
+    store_name = nil
+    connection.exec "SELECT name FROM chain WHERE chain_id = #{rmsc_show['chain_id']}" do | result |
+      store_name = result[0][0]
+    end
+    store_name
+  end
+
+  def attendee_lines(show_id, attendee_type, attendee_id, &block)
+    connection.exec "SELECT * FROM attendee_line WHERE show_id = #{show_id} AND attendee_type = #{attendee_type} AND attendee_id = #{attendee_id}" do | result |
+      result.each do | tuple |
+        block.call tuple
+      end
+    end
+  end
+
+  def exhibitor_associates(show_id, exhibitor_id, &block)
+    sql = <<-EOF
+    SELECT
+      a.first_name,
+      a.last_name
+    FROM
+      associate a,
+      associate_attendance aa
+    WHERE
+      aa.associate_id = a.associate_id
+      AND show_id = #{show_id}
+      AND exhibitor_id = #{exhibitor_id}
+EOF
+    connection.exec sql do | result |
+      result.each do | tuple |
+        block.call tuple
+      end
+    end
   end
 
   private 
@@ -49,14 +96,101 @@ class RMSCDb
 
 end
 
-rmscDb = RMSCDb.new
+class ShowManagerDb
 
-rmscDb.each_show do | tuple |
-  puts "#{tuple['id']} -- #{tuple['description']}"
+  attr_reader :rmsc_db
+
+  def initialize
+    @rmsc_db = RMSCDb.new
+  end
+
+  def clean
+    puts "Cleaning Show Mgr database..."
+    Coordinator.destroy_all
+    Venue.destroy_all
+
+    Associate.destroy_all
+    Line.destroy_all
+    Room.destroy_all
+    Registration.destroy_all
+    
+    Show.destroy_all
+
+    Exhibitor.destroy_all
+
+    Attendance.destroy_all
+    Buyer.destroy_all
+    Store.destroy_all
+
+    AddressInfo.destroy_all
+    Phone.destroy_all
+    Email.destroy_all
+  end
+
+  MODEL_MAP = {
+    'BuyerAttendance' => 'Attendance',
+    'ExhibitorAttendance' => 'Registration'
+  }
+
+  def show_mgr_model(rmsc_model)
+    return rmsc_model unless MODEL_MAP.has_key?(rmsc_model)
+    MODEL_MAP[rmsc_model]
+  end
+
+  %w{ Show Exhibitor Store Buyer BuyerAttendance ExhibitorAttendance }.each do | model_name |
+    define_method("convert_#{model_name.tableize}".to_sym) do
+      puts "Converting #{model_name.tableize}..."
+      rmsc_db.send("each_#{model_name.underscore}".to_sym) do | model_row |
+        eval(show_mgr_model(model_name)).convert(rmsc_db, model_row)
+      end
+    end
+  end
+
+  # def convert_shows
+  #   rmsc_db.each_show do | rmsc_show |
+  #     Show.convert(rmsc_db, rmsc_show)
+  #   end
+  # end
+
+  # def convert_exhibitors
+  #   rmsc_db.each_exhibitor do | rmsc_exhibitor |
+  #     Exhibitor.convert(rmsc_db, rmsc_exhibitor)
+  #   end
+  # end
+
+  # def convert_stores
+  #   rmsc_db.each_store do | rmsc_store |
+  #     Store.convert(rmsc_db, rmsc_store)
+  #   end
+  # end
+
+  def close
+    rmsc_db.close
+  end
+
 end
 
-rmscDb.each_associate_attendance do | tuple |
-  puts "#{tuple['show_id']} -- #{tuple['associate_id']}"
-end
+sm = ShowManagerDb.new
 
-rmscDb.close
+sm.clean
+
+sm.convert_shows
+sm.convert_exhibitors
+sm.convert_stores
+sm.convert_buyers
+sm.convert_buyer_attendances
+sm.convert_exhibitor_attendances
+
+sm.close
+
+# rmsc_db = RMSCDb.new
+
+# rmsc_db.each_show do | tuple |
+#   puts "#{tuple['id']} -- #{tuple['description']}"
+# end
+
+# rmsc_db.each_associate_attendance do | tuple |
+#   puts "#{tuple['show_id']} -- #{tuple['associate_id']}"
+# end
+
+# rmsc_db.close
