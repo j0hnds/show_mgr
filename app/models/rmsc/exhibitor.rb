@@ -6,6 +6,13 @@ module Rmsc::Exhibitor
     Exhibitor.create!(first_name: rmsc_exhibitor['first_name'],
                       last_name: rmsc_exhibitor['last_name'],
                       address_info_id: address.id).tap do | exhibitor |
+
+      exhibitor.phones << Phone.new(phone_type: 'phone',
+                                    phone_number: rmsc_exhibitor['phone']) if rmsc_exhibitor['phone']
+      exhibitor.phones << Phone.new(phone_type: 'fax',
+                                    phone_number: rmsc_exhibitor['fax']) if rmsc_exhibitor['fax']
+      exhibitor.phones << Phone.new(phone_type: 'cell',
+                                    phone_number: rmsc_exhibitor['cell']) if rmsc_exhibitor['cell']
       rmsc_db.map_table_id(:exhibitors, 
                            rmsc_exhibitor['exhibitor_id'], 
                            exhibitor.id)

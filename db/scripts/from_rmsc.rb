@@ -146,24 +146,6 @@ class ShowManagerDb
     end
   end
 
-  # def convert_shows
-  #   rmsc_db.each_show do | rmsc_show |
-  #     Show.convert(rmsc_db, rmsc_show)
-  #   end
-  # end
-
-  # def convert_exhibitors
-  #   rmsc_db.each_exhibitor do | rmsc_exhibitor |
-  #     Exhibitor.convert(rmsc_db, rmsc_exhibitor)
-  #   end
-  # end
-
-  # def convert_stores
-  #   rmsc_db.each_store do | rmsc_store |
-  #     Store.convert(rmsc_db, rmsc_store)
-  #   end
-  # end
-
   def close
     rmsc_db.close
   end
@@ -183,14 +165,3 @@ sm.convert_exhibitor_attendances
 
 sm.close
 
-# rmsc_db = RMSCDb.new
-
-# rmsc_db.each_show do | tuple |
-#   puts "#{tuple['id']} -- #{tuple['description']}"
-# end
-
-# rmsc_db.each_associate_attendance do | tuple |
-#   puts "#{tuple['show_id']} -- #{tuple['associate_id']}"
-# end
-
-# rmsc_db.close
