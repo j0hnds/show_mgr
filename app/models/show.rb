@@ -26,9 +26,6 @@ EOF
   end
 
   def show_lines
-    # @show_lines = Line.for_show(@current_show).collect do | line |
-    #   [ line.line, line.room.room, exhibitor_name(line.room.registration.exhibitor) ]
-    # end
     sql = <<-EOF
 SELECT
   l.line,
@@ -51,6 +48,37 @@ EOF
     line_data = []
     r.each do | row |
       line_data << [ row['line'], row['room'], row['exhibitor_name'] ]
+    end
+    line_data
+  end
+
+  def show_line_phones
+    sql = <<-EOF
+SELECT
+  line,
+  exhibitor_name,
+  p.phone_number
+FROM (
+
+SELECT
+  l.line,
+  regs.exhibitor_id,
+  e.first_name || ' ' || e.last_name as exhibitor_name
+FROM
+  registrations regs 
+    INNER JOIN rooms r ON r.registration_id = regs.id
+      INNER JOIN lines l ON l.room_id = r.id
+        INNER JOIN exhibitors e ON e.id = regs.exhibitor_id
+WHERE
+  regs.show_id = #{id}) le 
+  LEFT OUTER JOIN phones p ON p.phoneable_type = 'Exhibitor' AND p.phoneable_id = le.exhibitor_id AND p.phone_type = 'phone'
+ORDER BY
+  line ASC
+EOF
+    r = ActiveRecord::Base::connection.execute sql
+    line_data = []
+    r.each do | row |
+      line_data << [ row['line'], row['exhibitor_name'], row['phone_number'] ]
     end
     line_data
   end
