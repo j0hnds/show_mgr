@@ -1,4 +1,5 @@
 class BookletPdf < Prawn::Document
+  include ReportHelper
 
   def initialize(show, exhibitors, line_count)
     super()
@@ -287,13 +288,6 @@ class BookletPdf < Prawn::Document
 
   def display_name(obj)
     "#{obj.first_name} #{obj.last_name}"
-  end
-
-  def exhibitor_rooms(rooms)
-    room_label = "Room"
-    room_label = room_label.pluralize if rooms.count > 1
-
-    "#{room_label}: #{rooms.join(', ')}"
   end
 
   def exhibitor_address(exhibitor)

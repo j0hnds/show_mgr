@@ -15,6 +15,7 @@ ShowMgr::Application.routes.draw do
   #   resources :products
 
   resources :booklets, only: [ :show ]
+  resources :exhibitor_name_badges, only: [ :show ]
 
   # Example resource route with options:
   #   resources :products do
