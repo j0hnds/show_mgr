@@ -36,7 +36,7 @@ class MasterListPdf < Prawn::Document
         address.city,
         address.state,
         address.postal_code ]
-    end
+    end.sort { | a, b | a[1] <=> b[1] }
     
     table([ header ] + buyers,
           header: true,
