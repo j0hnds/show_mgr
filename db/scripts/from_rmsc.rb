@@ -40,7 +40,8 @@ class RMSCDb
   def store_name(rmsc_show)
     store_name = nil
     connection.exec "SELECT name FROM chain WHERE chain_id = #{rmsc_show['chain_id']}" do | result |
-      store_name = result[0][0]
+      
+      store_name = result[0]['name']
     end
     store_name
   end
