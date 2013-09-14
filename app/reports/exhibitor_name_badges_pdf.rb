@@ -40,32 +40,29 @@ class ExhibitorNameBadgesPdf < Prawn::Document
         bounding_box(upper_lefts[idx], :width => cell_width, :height => cell_height) do
           move_down 13.5
           x, y = [ 0, cell_height - 40.5 ]
-          #indent 13.5 do
+
           fill_color "ff0000"
-            text_box("#{exhibitor.first_name} #{exhibitor.last_name}", 
-                     at: [ x, y ],
-                     size: 24,
-                     width: cell_width,
-                     height: cell_height,
-                     align: :center)
-            #text("#{exhibitor.first_name} #{exhibitor.last_name}", :size => 10)
+          text_box("#{exhibitor.first_name} #{exhibitor.last_name}", 
+                   at: [ x, y ],
+                   size: 24,
+                   width: cell_width,
+                   height: cell_height,
+                   align: :center)
+
           fill_color "000000"
-            text_box(exhibitor_rooms(registration.rooms.pluck(:room)), 
-                     at: [ x, y - 54 ],
-                     size: 18,
-                     width: cell_width,
-                     height: cell_height,
-                     align: :center)
-            # text(exhibitor_rooms(registration.rooms.pluck(:room)), :size => 10)
-            text_box(registration.lines.collect(&:line).join(','), 
-                     at: [ x, y - 94.5 ],
-                     size: 18,
-                     width: cell_width,
-                     height: cell_height,
-                     align: :center)
-            # text(registration.lines.collect(&:line).join(','), :size => 10)
-          #end
-          stroke_bounds
+          text_box(exhibitor_rooms(registration.rooms.pluck(:room)), 
+                   at: [ x, y - 54 ],
+                   size: 18,
+                   width: cell_width,
+                   height: cell_height,
+                   align: :center)
+
+          text_box(registration.lines.collect(&:line).join(','), 
+                   at: [ x, y - 94.5 ],
+                   size: 18,
+                   width: cell_width,
+                   height: cell_height,
+                   align: :center)
         end
       end
     end
