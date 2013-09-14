@@ -18,6 +18,7 @@ ShowMgr::Application.routes.draw do
   resources :exhibitor_name_badges, only: [ :show ]
   resources :line_exhibitor_phones, only: [ :show ]
   resource :buyer_name_badges, only: [ :show ]
+  resource :master_list, only: [ :show ]
 
   # Example resource route with options:
   #   resources :products do
