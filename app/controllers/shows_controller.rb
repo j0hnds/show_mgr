@@ -6,4 +6,8 @@ class ShowsController < ApplicationController
     @shows = Show.order("start_date DESC")
   end
 
+  def show
+    @show = Show.find params[:id]
+  end
+
 end

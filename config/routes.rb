@@ -15,7 +15,7 @@ ShowMgr::Application.routes.draw do
   #   resources :products
 
   # The routes for all the JSON resources
-  resources :shows, only: [ :index ] do
+  resources :shows, only: [ :index, :show ] do
     resource :booklet, only: [ :show ]
     resource :exhibitor_name_badges, only: [ :show ]
     resource :line_exhibitor_phones, only: [ :show ]
