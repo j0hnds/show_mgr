@@ -17,6 +17,7 @@ ShowMgr::Application.routes.draw do
   resources :booklets, only: [ :show ]
   resources :exhibitor_name_badges, only: [ :show ]
   resources :line_exhibitor_phones, only: [ :show ]
+  resources :buyer_attendees, only: [ :show ]
   resource :buyer_name_badges, only: [ :show ]
   resource :master_list, only: [ :show ]
 
