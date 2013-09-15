@@ -1,7 +1,7 @@
 class BookletsController < ApplicationController
 
   def show
-    @current_show = Show.find params[:id]
+    @current_show = Show.find params[:show_id]
 
     @show_line_count = @current_show.num_lines
 

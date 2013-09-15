@@ -1,7 +1,7 @@
 class ExhibitorNameBadgesController < ApplicationController
 
   def show
-    @current_show = Show.find params[:id]
+    @current_show = Show.find params[:show_id]
     @registrations = @current_show.registrations
 
     respond_to do | format |

@@ -1,7 +1,7 @@
 class BuyerAttendeesController < ApplicationController
 
   def show
-    @current_show = Show.find params[:id]
+    @current_show = Show.find params[:show_id]
 
     @buyers = @current_show.buyers
 

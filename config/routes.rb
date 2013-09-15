@@ -14,10 +14,15 @@ ShowMgr::Application.routes.draw do
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
 
-  resources :booklets, only: [ :show ]
-  resources :exhibitor_name_badges, only: [ :show ]
-  resources :line_exhibitor_phones, only: [ :show ]
-  resources :buyer_attendees, only: [ :show ]
+  # The routes for all the JSON resources
+  resources :shows, only: [ :index ] do
+    resource :booklet, only: [ :show ]
+    resource :exhibitor_name_badges, only: [ :show ]
+    resource :line_exhibitor_phones, only: [ :show ]
+    resource :buyer_attendees, only: [ :show ]
+  end
+
+  # The routes for the non-show-related reports
   resource :buyer_name_badges, only: [ :show ]
   resource :master_list, only: [ :show ]
 

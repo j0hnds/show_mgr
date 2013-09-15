@@ -1,7 +1,7 @@
 class LineExhibitorPhonesController < ApplicationController
 
   def show
-    @current_show = Show.find params[:id]
+    @current_show = Show.find params[:show_id]
 
     respond_to do | format |
       format.pdf do
