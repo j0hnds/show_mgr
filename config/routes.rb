@@ -22,6 +22,8 @@ ShowMgr::Application.routes.draw do
     resource :buyer_attendees, only: [ :show ]
   end
 
+  resources :exhibitors, only: [ :index, :show, :create, :update ]
+
   # The routes for the non-show-related reports
   resource :buyer_name_badges, only: [ :show ]
   resource :master_list, only: [ :show ]
