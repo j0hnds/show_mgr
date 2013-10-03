@@ -19,7 +19,7 @@ class BookletPdf < Prawn::Document
 
   def render_title_page
     # put an image on the page
-    image('public/images/mountains.jpeg', 
+    image(Rails.root.join('public/images/mountains.jpeg').to_s, 
           :position => :center)
     text('Rocky Mountain', 
          :size => 30, 
