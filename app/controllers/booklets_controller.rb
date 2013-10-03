@@ -1,20 +1,19 @@
-class BookletsController < ApplicationController
+class BookletsController < ShowBaseController
 
   def show
-    @current_show = Show.find params[:show_id]
+    @show_line_count = current_show.num_lines
 
-    @show_line_count = @current_show.num_lines
-
-    @exhibitors = @current_show.exhibitors.ordered
+    @exhibitors = current_show.exhibitors.ordered
 
     respond_to do | format |
       format.pdf do
-        pdf = BookletPdf.new(@current_show, @exhibitors, @show_line_count)
+        pdf = BookletPdf.new(current_show, @exhibitors, @show_line_count)
         send_data(pdf.render, 
-                  filename: "booklet_#{@current_show.id}.pdf", 
+                  filename: "booklet_#{current_show.id}.pdf", 
                   type: "application/pdf")
       end
     end
+
   end
 
 end
