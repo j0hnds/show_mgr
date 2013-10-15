@@ -6,9 +6,9 @@ class ExhibitorsController < ApplicationController
 
   def index
     if params[:show_id].present?
-      @exhibitors = Show.find(params[:show_id]).exhibitors.ordered
+      @exhibitors = Show.find(params[:show_id]).exhibitors.includes(:address_info,:phones,:emails).ordered
     else
-      @exhibitors = Exhibitor.ordered
+      @exhibitors = Exhibitor.includes(:address_info,:phones,:emails).ordered
     end
   end
 
