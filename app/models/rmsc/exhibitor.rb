@@ -13,6 +13,8 @@ module Rmsc::Exhibitor
                                     phone_number: rmsc_exhibitor['fax']) if rmsc_exhibitor['fax']
       exhibitor.phones << Phone.new(phone_type: 'cell',
                                     phone_number: rmsc_exhibitor['cell']) if rmsc_exhibitor['cell']
+      exhibitor.emails << Email.new(email_type: 'email',
+                                    address: rmsc_exhibitor['email']) if rmsc_exhibitor['email']
       rmsc_db.map_table_id(:exhibitors, 
                            rmsc_exhibitor['exhibitor_id'], 
                            exhibitor.id)
